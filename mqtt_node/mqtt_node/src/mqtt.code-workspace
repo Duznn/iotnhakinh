@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "mqtt",
+			"path": "../../../webmqtt/mqtt"
+		},
+		{
+			"name": "mqtt 2node",
+			"path": "../../../mqtt 2node"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "mqtt 2node",
+		"files.associations": {
+			"cmath": "cpp"
+		}
+	}
+}
