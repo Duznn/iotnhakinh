@@ -1,0 +1,717 @@
+<!DOCTYPE HTML>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" 
+        crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+  <style>
+    /* CSS bắt đầu */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      background-image: url('i.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #2707b6;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nguu img {
+      width: 75px;
+      height: auto;
+      margin-right: 20px;
+      position: absolute;
+      padding: 0px 30px;
+      top: 0px;
+      left: 0px;
+      background: rgb(184, 184, 214);
+      border-radius: 10%;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      margin: 0;
+      color: white;
+      text-align: center;
+      word-wrap: break-word;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 30px 40px;
+      background-color: #6b7676;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      position:absolute;
+      top: 300px;
+    }
+/* Slider CSS */
+input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      outline: none;
+      opacity: 1.5rem;
+      transition: opacity 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background:#6b7676 ;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background:white;
+    }
+
+    .slider-value {
+      display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    text-align: center;
+      margin-top: 15px;
+      font-size: 0.8rem;
+      color: white;
+      font-weight: bold;
+     
+    }
+  
+    #sliderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 0; /* Đặt ở mép dưới của màn hình */
+  left: 29%; /* Bắt đầu từ mép trái */
+  width: 50%; /* Chiếm toàn bộ chiều ngang màn hình */
+  background: #7e6fda; /* Màu nền */
+  padding:  5px; /* Thu nhỏ khoảng cách bên trong */
+  border-radius: 10px; /* Bo góc nhẹ */
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng phía trên */
+}
+h3{
+ color: black;
+}
+.baodong1{
+  display: none;
+  position: fixed;
+  bottom: 0%;
+  left: 13%;
+  padding: 5px 5px;
+  background: rgb(184, 184, 214);
+  border-radius: 15px;
+  width: 10%;
+  text-align: center;
+ }
+ .baodong2{
+  display: none;
+  position: fixed;
+  bottom: 0%;
+  right: 5%;
+  padding: 5px 5px;
+  background: rgb(184, 184, 214);
+  border-radius: 15px;
+  width: 10%;
+  text-align: center;
+ }
+    button:hover {
+      background-color: #4a33d6;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Mặc định 2 cột */
+      gap: 20px;
+      justify-items: center;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 1200px;
+    }
+
+    .dataContainer {
+      display: none;
+      padding: 20px;
+      background: rgb(184, 184, 214);
+      border-radius: 30px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 0px;
+      margin-bottom: 50px;
+      padding: 10px;
+      background-color: #2707b6;
+      color: white;
+      border-radius: 30px;
+    }
+
+    .temperature-block, .humidity-block {
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px auto;
+      background-color: #6b7676;
+      color: white;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .temperature-block i, .humidity-block i {
+      margin-right: 10px;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 8px 15px;
+      }
+
+      .temperature-block, .humidity-block {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid-container {
+        grid-template-columns: 1fr; /* 1 cột cho màn hình nhỏ */
+      }
+
+      .nguu img {
+        width: 50px;
+      }
+
+      .header h1 {
+        font-size: 1.2rem;
+      }
+    }
+      /* Sidebar */
+      .sidebar {
+      position: fixed;
+      top: 73px;
+      left: -200px;
+      width: 135px;
+      height: 100%;
+      background-color: #2707b6;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+      padding-top: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+    .sidebar button {
+      background-color: rgb(184, 184, 214);
+      border: none;
+      border-radius: 5px;
+      color: #2707b6;
+      font-size: 1rem;
+      padding: 20px 20px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+     #backButton{
+      padding: 30px 30px;
+      margin: 10px 0;
+    }
+    .sidebar button i {
+      margin-right: 10px;
+    }
+    .sidebar button:hover {
+      background-color: rgb(184, 184, 214);
+    }
+    .chart-container {
+      display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0; /* Khoảng cách giữa các biểu đồ */
+  width: 100%; /* Đảm bảo chiều rộng */
+    }
+    canvas {
+      width: 100%;
+      height: 250px;
+    }
+ 
+
+    /* CSS kết thúc */
+  </style>
+</head>
+<body>
+  <!-- Header với logo và chữ -->
+  <div class="header">
+    <h1>GIÁM SÁT NHIỆT ĐỘ, ĐỘ ẨM NHÀ KÍNH</h1>
+  </div>
+  <div class="nguu">
+    <img src="/tlu.jpg" alt="Logo">
+  </div>
+  <!-- Nội dung chính -->
+  <div class="content">
+    <button id="displayButton">Get start</button>
+  </div>
+  <div id="sliderContainer" class="slider-container">
+    <input type="range" id="slider" min="1" max="5" value="3" step="1">
+    <p class="slider-value">QUAT GIO: <span id="sliderValue"></span></p>
+    <input type="range" id="slider" min="1" max="5" value="" step="1">
+    <p class="slider-value">PHUN SUONG: <span id="sliderValue"></span></p>
+    <input type="range" id="slider" min="1" max="5" value="3" step="1">
+    <p class="slider-value">MAY SUOI: <span id="sliderValue"></span></p>
+    <input type="range" id="slider" min="1" max="5" value="3" step="1">
+    <p class="slider-value">TUOI NUOC: <span id="sliderValue"></span></p>
+  </div>
+  <!-- Sidebar -->
+<div id="sidebar" class="sidebar">
+  <button id="homeButton">
+    <i class="fas fa-home"></i> Quay lại
+  </button>
+  <button id="sliderButton">
+    <i class="fas fa-sliders-h"></i> CONTROL
+  </button>
+  <button id="backButton" style="display: none;">
+    <i class="fas fa-arrow-left"></i>BACK
+  </button>
+</div>
+
+  <div class="grid-container">
+    <!-- Nhà kính 1 -->
+    <div id="dataContainer1" class="dataContainer">
+      <h2>NHÀ KÍNH 1</h2>
+      <p class="temperature-block">
+        <i class="fas fa-thermometer-half"></i>
+        <span class="dht-labels">Temperature:</span>
+        <span id="temperature1">--</span>
+        <sup class="units">&deg;C</sup>
+      </p>
+      <p class="humidity-block">
+        <i class="fas fa-tint"></i>
+        <span class="dht-labels">Humidity:</span>
+        <span id="humidity1">--</span>
+        <sup class="units">&percnt;</sup>
+      </p>
+    </div>
+    <!-- Nhà kính 2 -->
+    <div id="dataContainer2" class="dataContainer">
+      <h2>NHÀ KÍNH 2</h2>
+      <p class="temperature-block">
+        <i class="fas fa-thermometer-half"></i>
+        <span class="dht-labels">Temperature:</span>
+        <span id="temperature2">--</span>
+        <sup class="units">&deg;C</sup>
+      </p>
+      <p class="humidity-block">
+        <i class="fas fa-tint"></i>
+        <span class="dht-labels">Humidity:</span>
+        <span id="humidity2">--</span>
+        <sup class="units">&percnt;</sup>
+      </p>
+    </div>
+    <!-- Nhà kính 3 -->
+    <div id="dataContainer3" class="dataContainer">
+      <h2>NHÀ KÍNH 3</h2>
+      <p class="temperature-block">
+        <i class="fas fa-thermometer-half"></i>
+        <span class="dht-labels">Temperature:</span>
+        <span id="temperature3">--</span>
+        <sup class="units">&deg;C</sup>
+      </p>
+      <p class="humidity-block">
+        <i class="fas fa-tint"></i>
+        <span class="dht-labels">Humidity:</span>
+        <span id="humidity3">--</span>
+        <sup class="units">&percnt;</sup>
+      </p>
+    </div>
+    <!-- Nhà kính 4 -->
+    <div id="dataContainer4" class="dataContainer">
+      <h2>NHÀ KÍNH 4</h2>
+      <p class="temperature-block">
+        <i class="fas fa-thermometer-half"></i>
+        <span class="dht-labels">Temperature:</span>
+        <span id="temperature4">--</span>
+        <sup class="units">&deg;C</sup>
+      </p>
+      <p class="humidity-block">
+        <i class="fas fa-tint"></i>
+        <span class="dht-labels">Humidity:</span>
+        <span id="humidity4">--</span>
+        <sup class="units">&percnt;</sup>
+      </p>
+    </div>
+    <!--bao dong nha kinh 1-->
+    <div id="baodong1" class="baodong1">
+      <h3>NHA KINH 1:</h3>
+      <span id="baodong1">--</span>
+    </div>
+    <div id="baodong2" class="baodong2">
+      <h3>NHA KINH 2:</h3>
+      <span id="baodong2">--</span>
+    </div>
+        <!-- Biểu đồ Nhà kính 1 -->
+  <div class="chart-container">
+    <canvas id="chart1"></canvas>
+  </div>
+
+  <!-- Biểu đồ Nhà kính 2 -->
+  <div class="chart-container">
+    <canvas id="chart2"></canvas>
+  </div>
+
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const displayButton = document.getElementById("displayButton");
+  const dataContainers = document.querySelectorAll(".dataContainer");
+  const sidebar = document.getElementById("sidebar");
+  const homeButton = document.getElementById("homeButton");
+  const sliderButton = document.getElementById("sliderButton");
+  const sliderContainer = document.getElementById("sliderContainer");
+  const slider = document.getElementById("slider");
+  const sliderValue = document.getElementById("sliderValue");
+  const backButton = document.getElementById("backButton");
+  const baodong1 = document.getElementById("baodong1");
+  const baodong2 = document.getElementById("baodong2");
+ // Cấu hình biểu đồ cho Nhà kính 1
+const ctx1 = document.getElementById('chart1').getContext('2d');
+    const chart1 = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: [], // Nhãn thời gian
+        datasets: [
+          {
+            label: 'Temperature (°C) - Nhà kính 1',
+            data: [],
+            borderColor: '#6b7676',
+            backgroundColor: 'rgb(184, 184, 214)',
+            borderWidth: 2,
+            fill: true,
+          },
+          {
+            label: 'Humidity (%) - Nhà kính 1',
+            data: [],
+            borderColor: '#6b7676',
+            backgroundColor: '#7e6fda',
+            borderWidth: 2,
+            fill: true,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            type: 'time',
+            time: { unit: 'second' },
+            title: { display: true, text: 'Thời gian' },
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Giá trị' },
+            min: 0,
+            max: 100,
+            ticks: {
+              stepSize: 10,
+              color: 'gray',
+            },
+        },},
+      },
+    });
+
+    // Cấu hình biểu đồ cho Nhà kính 2
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+    const chart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: [], // Nhãn thời gian
+        datasets: [
+          {
+            label: 'Temperature (°C) - Nhà kính 2',
+            data: [],
+            borderColor: '#6b7676',
+            backgroundColor: 'rgb(184, 184, 214)',
+            borderWidth: 2,
+            fill: true,
+          },
+          {
+            label: 'Humidity (%) - Nhà kính 2',
+            data: [],
+            borderColor: '#6b7676',
+            backgroundColor: '#7e6fda',
+            borderWidth: 2,
+            fill: true,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            type: 'time',
+            time: { unit: 'second' },
+            title: { display: true, text: 'Thời gian' },
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Giá trị' },
+            min: 0,
+            max: 100,
+            ticks: {
+              stepSize: 10,
+              color: 'gray',
+            },
+          },
+        },
+      },
+    });
+
+    // Hàm cập nhật dữ liệu biểu đồ
+    function updateChart(chart, temperature, humidity) {
+      const currentTime = new Date();
+      chart.data.labels.push(currentTime);
+      chart.data.datasets[0].data.push(temperature);
+      chart.data.datasets[1].data.push(humidity);
+
+      // Giới hạn số lượng dữ liệu hiển thị (tối đa 10 điểm)
+      if (chart.data.labels.length > 20) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+        chart.data.datasets[1].data.shift();
+      }
+
+      chart.update();
+    }
+
+    // Giả lập dữ liệu từ server
+    function fetchData() {
+      // Lấy dữ liệu Nhà kính 1
+      fetch('/temperature1')
+        .then((response) => response.text())
+        .then((temp1) => {
+          fetch('/humidity1')
+            .then((response) => response.text())
+            .then((hum1) => {
+              updateChart(chart1, parseFloat(temp1), parseFloat(hum1));
+            });
+        });
+
+      // Lấy dữ liệu Nhà kính 2
+      fetch('/temperature2')
+        .then((response) => response.text())
+        .then((temp2) => {
+          fetch('/humidity2')
+            .then((response) => response.text())
+            .then((hum2) => {
+              updateChart(chart2, parseFloat(temp2), parseFloat(hum2));
+            });
+        });
+    }
+
+    // Cập nhật dữ liệu mỗi 5 giây
+    setInterval(fetchData, 5000);
+
+  // Ẩn thanh kéo và các nhà kính khi trang load
+  sliderContainer.style.display = "none";
+  dataContainers.forEach(container => container.style.display = "none");
+  backButton.style.display = "none"; // Ẩn nút "Back"
+  chart1.canvas.style.display = "none";
+  chart2.canvas.style.display = "none";
+  baodong1.style.display ="none";
+  baodong2.style.display ="none";
+
+  // Xử lý khi nhấn nút "Get Start"
+  displayButton.addEventListener("click", function () {
+    displayButton.style.display = "none"; // Ẩn nút "Get Start"
+    dataContainers.forEach(container => container.style.display = "block"); // Hiển thị nhà kính
+    sidebar.classList.add("active"); // Hiện sidebar
+    backButton.style.display = "none"; // Ẩn nút "Back" (không cần khi đang ở trang nhà kính)
+    updateData(); // Cập nhật dữ liệu nhà kính
+    setInterval(updateData, 10000); // Cập nhật dữ liệu mỗi 10s
+    chart1.canvas.style.display = "none";
+  chart2.canvas.style.display = "none";
+  baodong1.style.display ="none";
+  baodong2.style.display ="none";
+
+  });
+
+  // Xử lý khi nhấn "Điều khiển quạt gió"
+  sliderButton.addEventListener("click", function () {
+    // Ẩn các nhà kính và chỉ hiển thị thanh kéo
+    dataContainers.forEach(container => container.style.display = "none");
+    sliderContainer.style.display = "block"; // Hiển thị thanh kéo
+    backButton.style.display = "block"; // Hiển thị nút "Back"
+    baodong1.style.display ="block";
+    baodong2.style.display ="block";
+    chart1.canvas.style.display = "block";
+    chart2.canvas.style.display = "block";
+    updateChart();
+    setInterval(fetchData, 5000);
+  });
+
+  // Xử lý khi kéo thanh điều chỉnh
+  slider.addEventListener("input", function () {
+    sliderValue.textContent = slider.value; // Cập nhật giá trị thanh kéo
+  });
+
+  // Xử lý nút "Back"
+  backButton.addEventListener("click", function () {
+    // Quay lại trạng thái hiển thị nhà kính
+    sliderContainer.style.display = "none"; // Ẩn thanh kéo
+    dataContainers.forEach(container => container.style.display = "block"); // Hiển thị nhà kính
+    backButton.style.display = "none"; // Ẩn nút "Back"
+    chart1.canvas.style.display = "none";
+  chart2.canvas.style.display = "none";
+
+  });
+
+  // Xử lý nút "Quay lại" trong sidebar
+  homeButton.addEventListener("click", function () {
+    alert("Quay lại trang chính!");
+  });
+
+  // Hàm cập nhật dữ liệu nhà kính
+  function updateData() {
+    fetchTemperature(1);
+    fetchHumidity(1);
+    fetchTemperature(2);
+    fetchHumidity(2);
+    fetchTemperature(3);
+    fetchHumidity(3);
+    fetchTemperature(4);
+    fetchHumidity(4);
+    fetchbaodong1();
+    fetchbaodong2();
+  }
+
+  function fetchTemperature(n) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        document.getElementById(`temperature${n}`).textContent = this.responseText;
+      }
+    };
+    xhttp.open("GET", `/temperature${n}`, true);
+    xhttp.send();
+  }
+
+  function fetchHumidity(n) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        document.getElementById(`humidity${n}`).textContent = this.responseText;
+      }
+    };
+    xhttp.open("GET", `/humidity${n}`, true);
+    xhttp.send();
+  }
+});
+// Hàm cập nhật cảnh báo cho Nhà kính 1
+// Hàm cập nhật dữ liệu báo động cho Nhà kính 1
+function updateBaodong1() {
+  // Gửi yêu cầu lấy dữ liệu từ endpoint của ESP32
+  fetch('/baodong1')
+    .then(response => response.text()) // Lấy dữ liệu từ server
+    .then(baodong1 => {
+      // Chọn phần tử HTML cần cập nhật
+      const baodongSpan = document.querySelector('#baodong1 span');
+
+      // Cập nhật nội dung và màu sắc dựa trên trạng thái nhận được
+      if (baodong1.trim() === "BAO DONG") {
+        baodongSpan.textContent = "CẢNH BÁO: VƯỢT NGƯỠNG!";
+        baodongSpan.style.color = "red"; // Đổi màu chữ để dễ nhận biết
+        baodongSpan.style.fontWeight = "bold"; // In đậm chữ
+      } else {
+        baodongSpan.textContent = "TRẠNG THÁI: BÌNH THƯỜNG.";
+        baodongSpan.style.color = "green"; // Màu xanh cho trạng thái ổn định
+        baodongSpan.style.fontWeight = "bold"; // In đậm chữ
+      }
+    })
+    .catch(error => {
+      console.error("Không thể cập nhật dữ liệu baodong1:", error);
+    });
+}
+
+// Cập nhật trạng thái mỗi 5 giây
+setInterval(updateBaodong1, 5000);
+function updateBaodong2() {
+  // Gửi yêu cầu lấy dữ liệu từ endpoint của ESP32
+  fetch('/baodong2')
+    .then(response => response.text()) // Lấy dữ liệu từ server
+    .then(baodong2 => {
+      // Chọn phần tử HTML cần cập nhật
+      const baodongSpan = document.querySelector('#baodong2 span');
+
+      // Cập nhật nội dung và màu sắc dựa trên trạng thái nhận được
+      if (baodong2.trim() === "BAO DONG") {
+        baodongSpan.textContent = "CẢNH BÁO: VƯỢT NGƯỠNG!";
+        baodongSpan.style.color = "red"; // Đổi màu chữ để dễ nhận biết
+        baodongSpan.style.fontWeight = "bold"; // In đậm chữ
+      } else {
+        baodongSpan.textContent = "TRẠNG THÁI: BÌNH THƯỜNG.";
+        baodongSpan.style.color = "green"; // Màu xanh cho trạng thái ổn định
+        baodongSpan.style.fontWeight = "bold"; // In đậm chữ
+      }
+    })
+    .catch(error => {
+      console.error("Không thể cập nhật dữ liệu baodong2:", error);
+    });
+}
+// Cập nhật dữ liệu báo động mỗi 5 giây
+setInterval(updateBaodong2, 5000);
+
+  </script>
+</body>
+</html>
+
+
+

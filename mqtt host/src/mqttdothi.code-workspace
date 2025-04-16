@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../../mqttdothi"
+		},
+		{
+			"name": "mqtt_node",
+			"path": "../../mqtt_node/mqtt_node"
+		},
+		{
+			"name": "mqtt 2node",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "mqttdothi"
+	}
+}
